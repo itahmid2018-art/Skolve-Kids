@@ -4,6 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { db } from './server/db.js';
 import { aiGateway } from './server/ai.js';
+import { errorLogger } from './server/logger.js';
 
 dotenv.config();
 
@@ -42,15 +43,32 @@ function authenticate(req: Request, res: Response, next: NextFunction) {
 // ==============================================================================
 // 1. Health & Diagnostic Endpoints
 // ==============================================================================
-app.get('/api/health', (req: Request, res: Response) => {
+app.get('/api/health', async (req: Request, res: Response) => {
+  const providerStatus = await aiGateway.getProvidersStatus();
   res.json({
     status: 'healthy',
     version: '1.0.0',
     app: 'Skolve - AI Education Platform',
-    aiEngine: process.env.GEMINI_API_KEY ? 'gemini-3.8-flash (Active)' : 'Pedagogical Fallback Engine (Active)',
+    activeProvider: providerStatus.activeProvider,
+    availableProvidersCount: providerStatus.providers.filter(p => p.isConfigured).length,
     timestamp: new Date().toISOString(),
     uptimeSeconds: Math.round(process.uptime()),
   });
+});
+
+// Provider Management Endpoints
+app.get('/api/ai/providers', async (req: Request, res: Response) => {
+  const status = await aiGateway.getProvidersStatus();
+  res.json(status);
+});
+
+app.post('/api/ai/providers/select', (req: Request, res: Response) => {
+  const { providerId } = req.body;
+  if (!providerId) {
+    return res.status(400).json({ error: 'providerId is required' });
+  }
+  const selected = aiGateway.setActiveProvider(providerId);
+  res.json({ activeProvider: selected, message: `Active AI provider switched to ${selected}` });
 });
 
 // ==============================================================================
@@ -402,6 +420,27 @@ app.post('/api/dev/run-smoke-tests', async (req: Request, res: Response) => {
     passCount: tests.filter(t => t.status === 'passed').length,
     failCount: tests.filter(t => t.status === 'failed').length,
     tests,
+  });
+});
+
+// Run Full Multi-Provider Test Suite & Save Timestamped Logs to testing/errors/
+app.post('/api/dev/test-providers', async (req: Request, res: Response) => {
+  try {
+    const testRecord = await aiGateway.testAllProviders();
+    res.json(testRecord);
+  } catch (err: any) {
+    res.status(500).json({ error: err.message || 'Provider diagnostic run failed' });
+  }
+});
+
+// Retrieve Latest Error / Diagnostic Logs
+app.get('/api/dev/error-logs', (req: Request, res: Response) => {
+  const latestRun = errorLogger.getLatestRun();
+  const logFiles = errorLogger.listLogFiles();
+  res.json({
+    latestRun,
+    logFiles,
+    directory: 'testing/errors',
   });
 });
 

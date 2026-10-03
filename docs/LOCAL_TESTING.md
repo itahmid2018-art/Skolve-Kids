@@ -15,15 +15,28 @@ Skolve employs a four-tiered verification strategy:
 
 ---
 
-## 2. In-App Interactive Test Runner
+## 2. Multi-Provider AI Diagnostic Suite & Error Logs
 
-Skolve comes equipped with a built-in **Developer Hub & Test Runner** directly accessible from the top navigation bar or footer.
-- **Accessing the Runner:** Click the **"Doc & Test Hub"** link in the header or press `Ctrl + /` (`Cmd + /`).
-- **Features:**
-  - One-click execution of 6 automated test suites (Auth, Real-time DB, Course Stream, Socratic Tutor, Quiz Auto-Grader, and SSE Health).
-  - Real-time execution logs with response latencies.
-  - Live inspection of the database store (inspect active users, courses, and submissions).
-  - Embedded documentation reader for PRD, Technical Specs, and Installation.
+Skolve provides an automated diagnostic test harness for all configured and optional AI providers (Gemini, OpenAI, Anthropic, OpenRouter, Hugging Face, Ollama, llama.cpp).
+
+### CLI Execution
+```bash
+npm run test:providers
+```
+
+### Logging Artifacts in `testing/errors/`
+Every time tests are run, structured diagnostic and error logs are automatically deposited under `testing/errors/` with updated timestamps:
+1. **Timestamped Archive:** `testing/errors/error_log_<ISO-timestamp>.json` (monotonically recorded per execution)
+2. **Latest Run Pointer:** `testing/errors/latest_test_run.json` (always reflects the most recent run)
+3. **Markdown Summary:** `testing/errors/latest_summary.md` (clean tabular report with remedies)
+
+### In-App Interactive Test Runner & Provider Switcher
+- Click **"Doc & Test Hub"** in the top navigation bar.
+- Open the **"AI Providers & Error Logs"** tab:
+  - View status of all 7 providers (Configured vs. Optional).
+  - Click **"Run Provider Diagnostics"** to execute live pings with meaningful diagnostic messages.
+  - Review archived error logs and suggestions directly in the browser.
+  - Switch active model on the fly.
 
 ---
 

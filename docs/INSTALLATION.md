@@ -39,33 +39,46 @@ The application will be live at `http://localhost:3000`.
 
 ## 3. Environment Variables Configuration
 
-Create a `.env` file in the root directory:
+Create a `.env` file in the root directory (based on `.env.example`):
 
 ```bash
-# ==============================================================================
-# Skolve Environment Configuration
-# ==============================================================================
-
-# Server Port (Required: 3000 for AI Studio environment)
+# Core Configuration
 PORT=3000
-
-# Google Gemini API Key (Required for cloud GenAI features)
-# In Google AI Studio, this is automatically injected into process.env.GEMINI_API_KEY
-GEMINI_API_KEY="your-gemini-api-key-here"
-
-# Application Public URL
 APP_URL="http://localhost:3000"
+DEFAULT_AI_PROVIDER="auto" # Options: auto, gemini, openai, anthropic, openrouter, huggingface, ollama, llamacpp
+TESTING_ERROR_LOG_DIR="testing/errors"
 
-# Optional: Local Ollama Model Serving (for offline / open-source MoE prototyping)
-# Default Ollama REST endpoint:
+# 1. Google Gemini (Native / Default in AI Studio)
+GEMINI_API_KEY="your-gemini-key"
+GEMINI_MODEL="gemini-3.8-flash"
+
+# 2. OpenAI (Optional)
+OPENAI_API_KEY="sk-..."
+OPENAI_BASE_URL="https://api.openai.com/v1"
+OPENAI_MODEL="gpt-4o-mini"
+
+# 3. Anthropic Claude (Optional)
+ANTHROPIC_API_KEY="sk-ant-..."
+ANTHROPIC_BASE_URL="https://api.anthropic.com/v1"
+ANTHROPIC_MODEL="claude-3-5-haiku-20241022"
+
+# 4. OpenRouter (Optional - Multi-Model Gateway)
+OPENROUTER_API_KEY="sk-or-v1-..."
+OPENROUTER_BASE_URL="https://openrouter.ai/api/v1"
+OPENROUTER_MODEL="qwen/qwen-2.5-72b-instruct"
+
+# 5. Hugging Face Inference (Optional)
+HUGGINGFACE_API_KEY="hf_..."
+HUGGINGFACE_ENDPOINT_URL="https://router.huggingface.co/hf-inference/v1"
+HUGGINGFACE_MODEL="Qwen/Qwen2.5-Coder-32B-Instruct"
+
+# 6. Local Ollama (Optional)
 OLLAMA_BASE_URL="http://localhost:11434"
-OLLAMA_MODEL="qwen3:32b"
+OLLAMA_MODEL="qwen2.5:32b"
 
-# Real-Time Event Sync Heartbeat (milliseconds)
-SSE_HEARTBEAT_INTERVAL=15000
-
-# Node Environment
-NODE_ENV="development"
+# 7. Local llama.cpp (Optional)
+LLAMACPP_BASE_URL="http://localhost:8080"
+LLAMACPP_MODEL="default"
 ```
 
 ---
@@ -102,6 +115,7 @@ If you prefer using purely local open-source models for zero-cost generation:
 | Command | Action | Description |
 | :--- | :--- | :--- |
 | `npm run dev` | `tsx server.ts` | Starts the Express full-stack server with Vite middleware mounted on port 3000. Supports live backend code reloads and frontend asset serving. |
+| `npm run test:providers` | `tsx testing/providers.test.ts` | Executes multi-provider diagnostic test suite and generates timestamped error logs in `testing/errors/`. |
 | `npm run build` | `vite build` | Compiles the production React single-page application into `/dist`. |
 | `npm run lint` | `tsc --noEmit` | Runs full TypeScript static type checking across the entire client and server codebase. |
 | `npm run clean` | `rm -rf dist` | Clears compiled production bundles. |

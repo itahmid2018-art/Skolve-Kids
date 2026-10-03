@@ -1,0 +1,92 @@
+{
+  "runId": "test-run-1791039277525",
+  "timestamp": "2026-10-03T14:54:37.525Z",
+  "environment": "development",
+  "totalTested": 7,
+  "passedCount": 2,
+  "failedCount": 0,
+  "skippedCount": 5,
+  "results": [
+    {
+      "id": "gemini",
+      "name": "Google Gemini",
+      "status": "passed",
+      "isConfigured": true,
+      "model": "gemini-3.8-flash",
+      "latencyMs": 1490,
+      "message": "Validated: Google Gemini is online (1490ms response time)."
+    },
+    {
+      "id": "openai",
+      "name": "OpenAI",
+      "status": "skipped",
+      "isConfigured": false,
+      "endpoint": "https://api.openai.com/v1",
+      "model": "gpt-4o-mini",
+      "message": "Skipped: OPENAI_API_KEY is not configured in environment.",
+      "suggestions": [
+        "Add OPENAI_API_KEY=\"sk-...\" to .env to enable OpenAI models."
+      ]
+    },
+    {
+      "id": "anthropic",
+      "name": "Anthropic Claude",
+      "status": "skipped",
+      "isConfigured": false,
+      "endpoint": "https://api.anthropic.com/v1",
+      "model": "claude-3-5-haiku-20241022",
+      "message": "Skipped: ANTHROPIC_API_KEY is not configured in environment.",
+      "suggestions": [
+        "Add ANTHROPIC_API_KEY=\"sk-ant-...\" to .env to enable Claude models."
+      ]
+    },
+    {
+      "id": "openrouter",
+      "name": "OpenRouter (MoE Gateway)",
+      "status": "skipped",
+      "isConfigured": false,
+      "endpoint": "https://openrouter.ai/api/v1",
+      "model": "qwen/qwen-2.5-72b-instruct",
+      "message": "Skipped: OPENROUTER_API_KEY is not configured in environment.",
+      "suggestions": [
+        "Add OPENROUTER_API_KEY=\"sk-or-v1-...\" to .env to access 100+ open-source MoE models."
+      ]
+    },
+    {
+      "id": "huggingface",
+      "name": "Hugging Face Inference",
+      "status": "skipped",
+      "isConfigured": false,
+      "endpoint": "https://router.huggingface.co/hf-inference/v1",
+      "model": "Qwen/Qwen2.5-Coder-32B-Instruct",
+      "message": "Skipped: HUGGINGFACE_API_KEY is not configured in environment.",
+      "suggestions": [
+        "Add HUGGINGFACE_API_KEY=\"hf_...\" to .env for serverless open-weights."
+      ]
+    },
+    {
+      "id": "ollama",
+      "name": "Ollama (Local LLM)",
+      "status": "skipped",
+      "isConfigured": false,
+      "endpoint": "http://localhost:11434",
+      "model": "qwen2.5:32b",
+      "message": "Local daemon offline: Cannot connect to Ollama at http://localhost:11434 (fetch failed).",
+      "errorDetails": "TypeError: fetch failed",
+      "suggestions": [
+        "If you wish to use local open weights, start Ollama with \"ollama serve\".",
+        "Otherwise, leave unconfigured to use cloud providers."
+      ]
+    },
+    {
+      "id": "llamacpp",
+      "name": "llama.cpp Server",
+      "status": "passed",
+      "isConfigured": true,
+      "endpoint": "http://localhost:8080",
+      "model": "default",
+      "latencyMs": 33,
+      "message": "Validated: llama.cpp server is healthy (33ms response)."
+    }
+  ]
+}
