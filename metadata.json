@@ -1,0 +1,8 @@
+{
+  "name": "Skolve - AI Personalized Education Platform",
+  "description": "Adaptive, tailored AI learning platform generating structured curricula, real-time interactive lessons, and AI-graded assessments powered by open MoE & LLM architectures.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
